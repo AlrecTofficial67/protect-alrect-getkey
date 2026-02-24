@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PROTECT by Alrect GET Key</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-primary: #050508;
+      --bg-card: #0d0d14;
+      --bg-card2: #111119;
+      --accent: #00e5ff;
+      --accent2: #7c3aed;
+      --accent3: #ff2d55;
+      --text-primary: #e8eaf6;
+      --text-secondary: #7986cb;
+      --text-muted: #3d4270;
+      --border: #1a1a2e;
+      --border-glow: rgba(0, 229, 255, 0.15);
+      --success: #00e676;
+      --error: #ff2d55;
+      --warning: #ffd740;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Exo 2', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animated grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(ellipse at 30% 20%, rgba(124, 58, 237, 0.08) 0%, transparent 50%),
+                  radial-gradient(ellipse at 70% 80%, rgba(0, 229, 255, 0.06) 0%, transparent 50%);
+      z-index: 0;
+      pointer-events: none;
+      animation: bgPulse 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes bgPulse {
+      0% { opacity: 0.6; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1.05); }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding-top: 2rem;
+    }
+
+    .logo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, rgba(0,229,255,0.1), rgba(124,58,237,0.1));
+      border: 1px solid rgba(0,229,255,0.2);
+      border-radius: 4px;
+      padding: 0.25rem 0.75rem;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+
+    .logo-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s ease infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    .header h1 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      line-height: 1;
+      background: linear-gradient(135deg, #fff 0%, var(--accent) 50%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .header h1 span {
+      display: block;
+      font-size: 0.45em;
+      letter-spacing: 0.3em;
+      font-weight: 400;
+      background: linear-gradient(90deg, var(--text-secondary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.3em;
+    }
+
+    .header p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      font-weight: 300;
+      letter-spacing: 0.05em;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .card:hover::before { opacity: 1; }
+    .card:hover { border-color: var(--border-glow); }
+
+    .card-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-title::before {
+      content: '';
+      width: 3px;
+      height: 1.1em;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    /* Form elements */
+    .input-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    .input-field {
+      width: 100%;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.75rem 1rem;
+      color: var(--text-primary);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .input-field:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.08);
+    }
+
+    .input-field::placeholder {
+      color: var(--text-muted);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 4px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.1);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .btn:hover::after { opacity: 1; }
+    .btn:active { transform: scale(0.98); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #0097a7);
+      color: #000;
+      width: 100%;
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, var(--accent2), #5b21b6);
+      color: #fff;
+      width: 100%;
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, var(--accent3), #c0392b);
+      color: #fff;
+    }
+
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .btn:disabled::after { display: none; }
+
+    /* Status display */
+    .status-box {
+      border-radius: 4px;
+      padding: 1rem 1.25rem;
+      display: none;
+      align-items: flex-start;
+      gap: 0.75rem;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.85rem;
+      border: 1px solid;
+      margin-top: 1rem;
+    }
+
+    .status-box.show { display: flex; }
+
+    .status-box.valid {
+      background: rgba(0, 230, 118, 0.08);
+      border-color: rgba(0, 230, 118, 0.3);
+      color: var(--success);
+    }
+
+    .status-box.invalid {
+      background: rgba(255, 45, 85, 0.08);
+      border-color: rgba(255, 45, 85, 0.3);
+      color: var(--error);
+    }
+
+    .status-box.warning {
+      background: rgba(255, 215, 64, 0.08);
+      border-color: rgba(255, 215, 64, 0.3);
+      color: var(--warning);
+    }
+
+    .status-box.info {
+      background: rgba(0, 229, 255, 0.08);
+      border-color: rgba(0, 229, 255, 0.3);
+      color: var(--accent);
+    }
+
+    .status-icon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .status-content { flex: 1; }
+    .status-title { font-weight: bold; margin-bottom: 0.2rem; letter-spacing: 0.05em; }
+    .status-detail { opacity: 0.8; font-size: 0.8rem; }
+
+    /* Checkpoint progress */
+    .checkpoint-steps {
+      display: flex;
+      gap: 0;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .checkpoint-steps::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 10%;
+      right: 10%;
+      height: 2px;
+      background: var(--border);
+      z-index: 0;
+    }
+
+    .cp-step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cp-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--bg-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 0.5rem;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.85rem;
+      transition: all 0.4s;
+    }
+
+    .cp-step.active .cp-circle {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 12px rgba(0,229,255,0.3);
+    }
+
+    .cp-step.done .cp-circle {
+      border-color: var(--success);
+      background: rgba(0,230,118,0.1);
+      color: var(--success);
+    }
+
+    .cp-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .cp-step.active .cp-label { color: var(--accent); }
+    .cp-step.done .cp-label { color: var(--success); }
+
+    /* Grid layout */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 640px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    .mt-1 { margin-top: 1rem; }
+    .mt-2 { margin-top: 1.5rem; }
+
+    /* Key display */
+    .key-display {
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(0,229,255,0.2);
+      border-radius: 4px;
+      padding: 1rem 1.25rem;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: all;
+      display: none;
+    }
+
+    .key-display.show { display: block; }
+    .key-display:hover { border-color: var(--accent); box-shadow: 0 0 10px rgba(0,229,255,0.15); }
+
+    .key-hint {
+      text-align: center;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    /* Divider */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 1.5rem 0;
+    }
+
+    /* Loading spinner */
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(0,0,0,0.3);
+      border-top-color: currentColor;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      display: none;
+    }
+
+    .btn.loading .spinner { display: block; }
+    .btn.loading .btn-text { opacity: 0.7; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Section spacing */
+    .section { margin-bottom: 1.5rem; }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 2rem 0 1rem;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 0.08em;
+    }
+
+    /* Scan line effect */
+    @keyframes scanline {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(100vh); }
+    }
+
+    .scanline {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(transparent, rgba(0,229,255,0.04), transparent);
+      animation: scanline 4s linear infinite;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* Tab system */
+    .tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+
+    .tab-btn {
+      padding: 0.6rem 1.2rem;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Info rows */
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 0.85rem;
+    }
+
+    .info-row:last-child { border-bottom: none; }
+    .info-label { color: var(--text-muted); font-family: 'Share Tech Mono', monospace; font-size: 0.75rem; letter-spacing: 0.05em; }
+    .info-value { color: var(--text-primary); font-family: 'Share Tech Mono', monospace; }
+    .info-value.green { color: var(--success); }
+    .info-value.red { color: var(--error); }
+    .info-value.blue { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="scanline"></div>
+
+  <div class="container">
+    <header class="header">
+      <div class="logo-badge">System Online · v1.0.0</div>
+      <h1>
+        <span>PROTECT by Alrect</span>
+        GET Key
+      </h1>
+      <p>Sistem manajemen key Roblox Executor dengan keamanan tingkat tinggi</p>
+    </header>
+
+    <!-- Tabs -->
+    <div class="card">
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('get-key')">GET KEY</button>
+        <button class="tab-btn" onclick="switchTab('verify')">VERIFY</button>
+        <button class="tab-btn" onclick="switchTab('info')">INFO</button>
+      </div>
+
+      <!-- TAB: GET KEY (Checkpoint flow) -->
+      <div id="tab-get-key" class="tab-content active">
+        <div class="section">
+          <div class="checkpoint-steps">
+            <div class="cp-step" id="cp-step-0">
+              <div class="cp-circle">01</div>
+              <div class="cp-label">Mulai</div>
+            </div>
+            <div class="cp-step" id="cp-step-1">
+              <div class="cp-circle">02</div>
+              <div class="cp-label">Checkpoint 1</div>
+            </div>
+            <div class="cp-step" id="cp-step-2">
+              <div class="cp-circle">03</div>
+              <div class="cp-label">Checkpoint 2</div>
+            </div>
+            <div class="cp-step" id="cp-step-3">
+              <div class="cp-circle">04</div>
+              <div class="cp-label">Key</div>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label">HWID Kamu</label>
+            <input type="text" id="hwid-input" class="input-field" placeholder="Masukkan HWID perangkat kamu..." />
+          </div>
+
+          <button class="btn btn-primary" id="start-btn" onclick="startCheckpoint()">
+            <div class="spinner"></div>
+            <span class="btn-text">▶ MULAI GET KEY</span>
+          </button>
+
+          <div id="cp-status" class="status-box mt-1"></div>
+
+          <div id="cp1-section" style="display:none;" class="mt-2">
+            <hr class="divider" />
+            <div class="card-title">Checkpoint 1</div>
+            <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:1rem;">
+              Klik tombol di bawah untuk membuka Checkpoint 1. Selesaikan halaman tersebut, lalu kembali ke sini.
+            </p>
+            <div class="grid-2">
+              <button class="btn btn-secondary" id="cp1-open-btn" onclick="openCheckpoint1()">
+                <span class="btn-text">🔗 BUKA CHECKPOINT 1</span>
+              </button>
+              <button class="btn btn-primary" id="cp1-verify-btn" onclick="verifyCheckpoint1()" disabled>
+                <div class="spinner"></div>
+                <span class="btn-text">✓ VERIFIKASI CP1</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="cp2-section" style="display:none;" class="mt-2">
+            <hr class="divider" />
+            <div class="card-title">Checkpoint 2</div>
+            <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:1rem;">
+              Langkah terakhir! Selesaikan Checkpoint 2 untuk mendapatkan key kamu.
+            </p>
+            <div class="grid-2">
+              <button class="btn btn-secondary" id="cp2-open-btn" onclick="openCheckpoint2()">
+                <span class="btn-text">🔗 BUKA CHECKPOINT 2</span>
+              </button>
+              <button class="btn btn-primary" id="cp2-verify-btn" onclick="verifyCheckpoint2()" disabled>
+                <div class="spinner"></div>
+                <span class="btn-text">✓ VERIFIKASI CP2</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="generate-section" style="display:none;" class="mt-2">
+            <hr class="divider" />
+            <div class="card-title" style="color:var(--success)">✓ Checkpoint Selesai</div>
+            <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:1rem;">
+              Semua checkpoint berhasil! Klik tombol di bawah untuk generate key kamu.
+            </p>
+            <button class="btn btn-primary" id="generate-btn" onclick="generateKey()">
+              <div class="spinner"></div>
+              <span class="btn-text">⚡ GENERATE KEY SEKARANG</span>
+            </button>
+
+            <div id="generated-key" class="key-display mt-1" onclick="copyKey(this)"></div>
+            <p class="key-hint" id="key-hint" style="display:none;">Klik untuk menyalin · Key valid 3 hari</p>
+            <div id="key-info" style="display:none;" class="mt-1">
+              <div class="info-row">
+                <span class="info-label">EXPIRES AT</span>
+                <span class="info-value blue" id="key-expires"></span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">TIME REMAINING</span>
+                <span class="info-value green" id="key-remaining"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: VERIFY -->
+      <div id="tab-verify" class="tab-content">
+        <div class="input-group">
+          <label class="input-label">Key Alrect</label>
+          <input type="text" id="verify-key" class="input-field" placeholder="alrect-XXXXX-XXXX" />
+        </div>
+        <div class="input-group">
+          <label class="input-label">HWID</label>
+          <input type="text" id="verify-hwid" class="input-field" placeholder="Masukkan HWID kamu..." />
+        </div>
+        <button class="btn btn-primary" onclick="verifyKey()">
+          <div class="spinner"></div>
+          <span class="btn-text">🔍 VERIFIKASI KEY</span>
+        </button>
+
+        <div id="verify-status" class="status-box mt-1"></div>
+
+        <div id="verify-details" style="display:none;" class="mt-1">
+          <hr class="divider" />
+          <div class="info-row">
+            <span class="info-label">STATUS</span>
+            <span class="info-value green" id="vd-status"></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">EXPIRES</span>
+            <span class="info-value" id="vd-expires"></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">TIME LEFT</span>
+            <span class="info-value blue" id="vd-remaining"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: INFO -->
+      <div id="tab-info" class="tab-content">
+        <div class="card-title">Tentang Sistem</div>
+        <div class="info-row">
+          <span class="info-label">KEY FORMAT</span>
+          <span class="info-value blue">alrect-XXXXX-XXXX</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">KEY DURATION</span>
+          <span class="info-value green">3 Hari</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">HWID BINDING</span>
+          <span class="info-value green">✓ Aktif</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">CHECKPOINT</span>
+          <span class="info-value green">2 Tahap</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">ANTI-REUSE</span>
+          <span class="info-value green">✓ Aktif</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">BRANDING</span>
+          <span class="info-value blue">PROTECT by Alrect</span>
+        </div>
+        <hr class="divider" />
+        <p style="font-size:0.8rem;color:var(--text-muted);line-height:1.6;">
+          Sistem ini menggunakan HWID binding untuk memastikan satu key hanya bisa digunakan di satu perangkat.
+          Key otomatis kadaluarsa setelah 3 hari dan semua validasi dilakukan di server.
+        </p>
+      </div>
+    </div>
+
+    <footer class="footer">
+      PROTECT by Alrect GET Key System · &copy; 2024 · All rights reserved
+    </footer>
+  </div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkpoint 1 · PROTECT by Alrect</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #050508;
+      --accent: #00e5ff;
+      --accent2: #7c3aed;
+      --text: #e8eaf6;
+      --muted: #7986cb;
+      --border: #1a1a2e;
+      --success: #00e676;
+    }
+    * { margin:0;padding:0;box-sizing:border-box; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Exo 2', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    body::before {
+      content:'';position:fixed;inset:0;
+      background-image: linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px);
+      background-size:40px 40px;pointer-events:none;
+    }
+    .box {
+      position:relative;z-index:1;
+      background: #0d0d14;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2.5rem 2rem;
+      max-width: 480px;
+      width:100%;
+      text-align:center;
+    }
+    .badge {
+      display:inline-block;
+      background: rgba(0,229,255,0.1);
+      border: 1px solid rgba(0,229,255,0.2);
+      padding:0.2rem 0.7rem;
+      border-radius:3px;
+      font-family:'Share Tech Mono',monospace;
+      font-size:0.7rem;
+      color:var(--accent);
+      letter-spacing:0.15em;
+      margin-bottom:1.2rem;
+    }
+    .step-number {
+      font-family:'Rajdhani',sans-serif;
+      font-size:3.5rem;
+      font-weight:700;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+      line-height:1;
+      margin-bottom:0.3rem;
+    }
+    h1 {
+      font-family:'Rajdhani',sans-serif;
+      font-size:1.4rem;
+      font-weight:600;
+      letter-spacing:0.1em;
+      text-transform:uppercase;
+      margin-bottom:0.5rem;
+    }
+    p {
+      color:var(--muted);
+      font-size:0.875rem;
+      line-height:1.6;
+      margin-bottom:1.5rem;
+    }
+    .timer {
+      font-family:'Share Tech Mono',monospace;
+      font-size:0.8rem;
+      color:var(--accent);
+      margin-bottom:1.5rem;
+      letter-spacing:0.08em;
+    }
+    .timer span {
+      background:rgba(0,229,255,0.1);
+      padding:0.2rem 0.5rem;
+      border-radius:3px;
+    }
+    .btn {
+      display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;
+      width:100%;padding:0.85rem;
+      background:linear-gradient(135deg,var(--accent),#0097a7);
+      color:#000;border:none;border-radius:4px;
+      font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;
+      letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;
+      transition:all 0.2s;margin-bottom:0.75rem;
+    }
+    .btn:hover{opacity:0.9;transform:translateY(-1px);}
+    .btn:active{transform:scale(0.98);}
+    .btn.done {background:linear-gradient(135deg,var(--success),#00897b);pointer-events:none;}
+    .progress {
+      width:100%;height:4px;background:var(--border);border-radius:2px;
+      margin-bottom:1.5rem;overflow:hidden;
+    }
+    .progress-bar {
+      height:100%;
+      background:linear-gradient(90deg,var(--accent2),var(--accent));
+      border-radius:2px;
+      width:50%;
+      transition:width 0.5s ease;
+    }
+    .info {
+      font-family:'Share Tech Mono',monospace;
+      font-size:0.7rem;
+      color:var(--muted);
+      letter-spacing:0.05em;
+      margin-top:0.5rem;
+    }
+    .verified-msg {
+      display:none;
+      background:rgba(0,230,118,0.08);
+      border:1px solid rgba(0,230,118,0.3);
+      color:var(--success);
+      padding:0.75rem;
+      border-radius:4px;
+      font-family:'Share Tech Mono',monospace;
+      font-size:0.85rem;
+      margin-bottom:1rem;
+    }
+    .verified-msg.show{display:block;}
+    .countdown {
+      font-family:'Share Tech Mono',monospace;
+      font-size:2rem;
+      color:var(--accent);
+      margin:1rem 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="badge">CHECKPOINT 1 of 2</div>
+    <div class="step-number">01</div>
+    <h1>Verifikasi Pertama</h1>
+    <p>Tonton iklan singkat untuk membuktikan kamu bukan bot. Setelah timer selesai, tombol verifikasi akan aktif.</p>
+
+    <div class="progress">
+      <div class="progress-bar" id="prog-bar"></div>
+    </div>
+
+    <div class="timer">Waktu tersisa: <span id="countdown">30</span> detik</div>
+
+    <div class="verified-msg" id="verified-msg">
+      ✓ Checkpoint 1 berhasil diverifikasi! Kembali ke halaman utama.
+    </div>
+
+    <button class="btn" id="verify-btn" disabled onclick="verifyCP1()">
+      ⏳ TUNGGU TIMER...
+    </button>
+
+    <button class="btn" style="background:rgba(255,255,255,0.05);color:var(--text);" onclick="window.close()">
+      ← KEMBALI
+    </button>
+
+    <div class="info" id="status-info">Harap tunggu timer selesai sebelum melanjutkan.</div>
+  </div>
+
+  <script>
+    // Ambil parameter dari URL
+    const params = new URLSearchParams(window.location.search);
+    const hwid = params.get("hwid");
+    const token = params.get("token");
+
+    if (!hwid || !token) {
+      document.getElementById("status-info").textContent = "Error: Parameter tidak valid. Kembali ke halaman utama.";
+    }
+
+    // Countdown 30 detik
+    let timeLeft = 30;
+    const countdownEl = document.getElementById("countdown");
+    const verifyBtn = document.getElementById("verify-btn");
+    const progBar = document.getElementById("prog-bar");
+
+    const interval = setInterval(() => {
+      timeLeft--;
+      countdownEl.textContent = timeLeft;
+      progBar.style.width = ((30 - timeLeft) / 30 * 100) + "%";
+
+      if (timeLeft <= 0) {
+        clearInterval(interval);
+        verifyBtn.disabled = false;
+        verifyBtn.textContent = "✓ VERIFIKASI SEKARANG";
+        document.getElementById("status-info").textContent = "Timer selesai! Klik tombol untuk verifikasi.";
+      }
+    }, 1000);
+
+    async function verifyCP1() {
+      verifyBtn.disabled = true;
+      verifyBtn.textContent = "Memverifikasi...";
+
+      try {
+        const res = await fetch("/api/checkpoint/verify1", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ hwid, token }),
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          verifyBtn.classList.add("done");
+          verifyBtn.textContent = "✓ CHECKPOINT 1 SELESAI";
+          document.getElementById("verified-msg").classList.add("show");
+          document.getElementById("status-info").textContent = "Kembali ke tab sebelumnya dan klik Verifikasi CP1.";
+
+          // Simpan cp2 redirect URL jika ada
+          if (data.redirectUrl) {
+            localStorage.setItem("cp2_url", data.redirectUrl);
+          }
+
+          // Auto close after 3s
+          setTimeout(() => {
+            try { window.close(); } catch(e) {}
+          }, 3000);
+        } else {
+          verifyBtn.disabled = false;
+          verifyBtn.textContent = "✗ GAGAL - COBA LAGI";
+          document.getElementById("status-info").textContent = "Error: " + data.message;
+        }
+      } catch(e) {
+        verifyBtn.disabled = false;
+        verifyBtn.textContent = "✗ NETWORK ERROR";
+        document.getElementById("status-info").textContent = "Tidak bisa terhubung ke server.";
+      }
+    }
+  </script>
+</body>
+</html>

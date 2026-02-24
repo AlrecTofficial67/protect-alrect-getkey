@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkpoint 2 · PROTECT by Alrect</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:#050508;--accent:#00e5ff;--accent2:#7c3aed;--text:#e8eaf6;
+      --muted:#7986cb;--border:#1a1a2e;--success:#00e676;--warning:#ffd740;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{background:var(--bg);color:var(--text);font-family:'Exo 2',sans-serif;
+      min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem;}
+    body::before{content:'';position:fixed;inset:0;
+      background-image:linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px);
+      background-size:40px 40px;pointer-events:none;}
+    .box{position:relative;z-index:1;background:#0d0d14;border:1px solid var(--border);
+      border-radius:8px;padding:2.5rem 2rem;max-width:480px;width:100%;text-align:center;}
+    .badge{display:inline-block;background:rgba(124,58,237,0.15);
+      border:1px solid rgba(124,58,237,0.3);padding:0.2rem 0.7rem;border-radius:3px;
+      font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--accent2);
+      letter-spacing:0.15em;margin-bottom:1.2rem;}
+    .step-number{font-family:'Rajdhani',sans-serif;font-size:3.5rem;font-weight:700;
+      background:linear-gradient(135deg,var(--accent2),var(--accent));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+      line-height:1;margin-bottom:0.3rem;}
+    h1{font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:600;
+      letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.5rem;}
+    p{color:var(--muted);font-size:0.875rem;line-height:1.6;margin-bottom:1.5rem;}
+    .quiz-box{background:rgba(0,0,0,0.4);border:1px solid var(--border);border-radius:6px;
+      padding:1.25rem;margin-bottom:1.5rem;text-align:left;}
+    .quiz-question{font-size:0.9rem;color:var(--text);margin-bottom:1rem;line-height:1.5;}
+    .quiz-options{display:flex;flex-direction:column;gap:0.5rem;}
+    .quiz-option{padding:0.6rem 0.9rem;border:1px solid var(--border);border-radius:4px;
+      background:transparent;color:var(--muted);font-family:'Exo 2',sans-serif;font-size:0.85rem;
+      cursor:pointer;text-align:left;transition:all 0.2s;}
+    .quiz-option:hover{border-color:var(--accent2);color:var(--text);background:rgba(124,58,237,0.08);}
+    .quiz-option.selected{border-color:var(--accent2);color:var(--accent2);background:rgba(124,58,237,0.12);}
+    .quiz-option.correct{border-color:var(--success);color:var(--success);background:rgba(0,230,118,0.08);pointer-events:none;}
+    .quiz-option.wrong{border-color:#ff2d55;color:#ff2d55;background:rgba(255,45,85,0.08);pointer-events:none;}
+    .progress{width:100%;height:4px;background:var(--border);border-radius:2px;
+      margin-bottom:1.5rem;overflow:hidden;}
+    .progress-bar{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));
+      border-radius:2px;width:100%;transition:width 0.5s ease;}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;
+      width:100%;padding:0.85rem;background:linear-gradient(135deg,var(--accent2),#5b21b6);
+      color:#fff;border:none;border-radius:4px;font-family:'Rajdhani',sans-serif;font-size:1rem;
+      font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;
+      transition:all 0.2s;margin-bottom:0.75rem;}
+    .btn:hover{opacity:0.9;transform:translateY(-1px);}
+    .btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
+    .btn.done{background:linear-gradient(135deg,var(--success),#00897b);pointer-events:none;}
+    .verified-msg{display:none;background:rgba(0,230,118,0.08);
+      border:1px solid rgba(0,230,118,0.3);color:var(--success);padding:0.75rem;
+      border-radius:4px;font-family:'Share Tech Mono',monospace;font-size:0.85rem;margin-bottom:1rem;}
+    .verified-msg.show{display:block;}
+    .info{font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--muted);
+      letter-spacing:0.05em;margin-top:0.5rem;}
+    .feedback{font-family:'Share Tech Mono',monospace;font-size:0.8rem;
+      padding:0.5rem;border-radius:3px;margin-top:0.75rem;display:none;}
+    .feedback.show{display:block;}
+    .feedback.correct{color:var(--success);}
+    .feedback.wrong{color:#ff2d55;}
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="badge">CHECKPOINT 2 of 2 · FINAL</div>
+    <div class="step-number">02</div>
+    <h1>Verifikasi Final</h1>
+    <p>Jawab pertanyaan di bawah ini untuk membuktikan kamu adalah pengguna nyata bukan bot.</p>
+
+    <div class="progress">
+      <div class="progress-bar" id="prog-bar"></div>
+    </div>
+
+    <div class="quiz-box">
+      <div class="quiz-question" id="question-text"></div>
+      <div class="quiz-options" id="options-container"></div>
+      <div class="feedback" id="feedback"></div>
+    </div>
+
+    <div class="verified-msg" id="verified-msg">
+      ✓ Checkpoint 2 berhasil! Kembali ke halaman utama untuk generate key.
+    </div>
+
+    <button class="btn" id="verify-btn" disabled onclick="verifyCP2()">
+      JAWAB DULU
+    </button>
+
+    <button class="btn" style="background:rgba(255,255,255,0.05);color:var(--text);" onclick="window.close()">
+      ← KEMBALI
+    </button>
+
+    <div class="info" id="status-info">Pilih jawaban yang benar untuk melanjutkan.</div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const hwid = params.get("hwid");
+    const token = params.get("token");
+
+    // Quiz sederhana (anti-bot)
+    const quizzes = [
+      { q: "Berapa hasil dari 7 × 8?", options: ["48", "54", "56", "64"], answer: 2 },
+      { q: "Warna langit di siang hari yang cerah adalah?", options: ["Merah", "Hijau", "Biru", "Hitam"], answer: 2 },
+      { q: "Berapa jumlah sisi pada segi enam?", options: ["4", "5", "6", "8"], answer: 2 },
+      { q: "Ibu kota Indonesia adalah?", options: ["Surabaya", "Jakarta", "Bandung", "Bali"], answer: 1 },
+      { q: "Huruf vokal dalam alfabet berjumlah?", options: ["3", "4", "5", "6"], answer: 2 },
+    ];
+
+    const quiz = quizzes[Math.floor(Math.random() * quizzes.length)];
+    let answered = false;
+    let correct = false;
+
+    document.getElementById("question-text").textContent = quiz.q;
+    const container = document.getElementById("options-container");
+
+    quiz.options.forEach((opt, i) => {
+      const btn = document.createElement("button");
+      btn.className = "quiz-option";
+      btn.textContent = opt;
+      btn.onclick = () => selectOption(i, btn);
+      container.appendChild(btn);
+    });
+
+    function selectOption(index, el) {
+      if (answered) return;
+
+      const allOpts = document.querySelectorAll(".quiz-option");
+      allOpts.forEach(o => o.classList.remove("selected"));
+
+      answered = true;
+      const feedback = document.getElementById("feedback");
+      feedback.classList.add("show");
+
+      if (index === quiz.answer) {
+        el.classList.add("correct");
+        feedback.className = "feedback show correct";
+        feedback.textContent = "✓ Jawaban benar!";
+        correct = true;
+        document.getElementById("verify-btn").disabled = false;
+        document.getElementById("verify-btn").textContent = "✓ VERIFIKASI CHECKPOINT 2";
+        document.getElementById("prog-bar").style.width = "100%";
+      } else {
+        el.classList.add("wrong");
+        allOpts[quiz.answer].classList.add("correct");
+        feedback.className = "feedback show wrong";
+        feedback.textContent = "✗ Jawaban salah! Muat ulang halaman untuk mencoba lagi.";
+      }
+    }
+
+    async function verifyCP2() {
+      if (!correct) return;
+
+      const verifyBtn = document.getElementById("verify-btn");
+      verifyBtn.disabled = true;
+      verifyBtn.textContent = "Memverifikasi...";
+
+      try {
+        const res = await fetch("/api/checkpoint/verify2", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ hwid, token }),
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          verifyBtn.classList.add("done");
+          verifyBtn.textContent = "✓ CHECKPOINT 2 SELESAI!";
+          document.getElementById("verified-msg").classList.add("show");
+          document.getElementById("status-info").textContent = "Kembali ke halaman utama dan klik Generate Key.";
+
+          setTimeout(() => {
+            try { window.close(); } catch(e) {}
+          }, 3000);
+        } else {
+          verifyBtn.disabled = false;
+          verifyBtn.textContent = "✗ GAGAL - COBA LAGI";
+          document.getElementById("status-info").textContent = "Error: " + data.message;
+        }
+      } catch(e) {
+        verifyBtn.disabled = false;
+        verifyBtn.textContent = "✗ NETWORK ERROR";
+        document.getElementById("status-info").textContent = "Tidak bisa terhubung ke server.";
+      }
+    }
+  </script>
+</body>
+</html>
